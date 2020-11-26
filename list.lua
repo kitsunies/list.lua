@@ -1,5 +1,8 @@
 local list = {}
 
+local pairs, ipairs, rawget = pairs, ipairs, rawget
+local select, unpack = select, unpack or table.unpack
+
 -- count the keys in a table with an optional upper limit.
 function list.count(t, maxn)
     local maxn = maxn or 1 / 0
@@ -72,7 +75,7 @@ function list.merge(dt, ...)
         local t = select(i, ...)
         if t then
             for k, v in pairs(t) do
-                if not rawget(dt, k) then
+                if rawget(dt, k) == nil then
                     dt[k] = v
                 end
             end
@@ -84,14 +87,27 @@ end
 -- get the value of a table field, and if there is no field present, creates and returns it as an empty table.
 function list.attr(t, k, v0)
     local v = t[k]
-    if not v then
-        if not v0 then
+    if v == nil then
+        if v0 == nil then
             v0 = {}
         end
         v = v0
         t[k] = v
     end
     return v
+end
+
+if table.pack then
+    list.pack = table.pack
+else
+    table.pack = function(...)
+        return {n = select("#", ...), ...}
+    end
+end
+
+--always use this because unpack/table.unpack's default j is #t not t.n.
+function list.unpack(t, i, j)
+    return unpack(t, i or 1, j or t.n or #t)
 end
 
 -- extend a list with the elements of other lists.
@@ -118,7 +134,7 @@ function list.append(dt, ...)
 end
 
 -- insert n elements at i, shifting elements on the right of i (i inclusive) to the right.
-local function insert(t, i, n)
+function list.insert(t, i, n)
     if n == 1 then
         table.insert(t, i, false)
         return
@@ -129,7 +145,7 @@ local function insert(t, i, n)
 end
 
 -- remove n elements at i, shifting elements on the right of i (i inclusive) to the left.
-local function remove(t, i, n)
+function list.remove(t, i, n)
     n = min(n, #t - i + 1)
     if n == 1 then
         table.remove(t, i)
@@ -143,12 +159,23 @@ local function remove(t, i, n)
     end
 end
 
+function list.find(t, v)
+    if not v or not t then
+        return
+    end
+    for i = 1, #t do
+        if v == t[i] then
+            return t[i]
+        end
+    end
+end
+
 -- shift all the elements on the right of i (i inclusive) to the left or further to the right.
 function list.shift(t, i, n)
     if n > 0 then
-        insert(t, i, n)
+        list.insert(t, i, n)
     elseif n < 0 then
-        remove(t, i, -n)
+        list.remove(t, i, -n)
     end
     return t
 end
