@@ -23,10 +23,10 @@ local list = require("list")
 
 ## Varargs
 
-### `glue.pack(...) -> t`
+### `list.pack(...) -> t`
 packs varargs.
 
-### `glue.unpack(t,[i][,j]) -> ...`
+### `list.unpack(t,[, i][, j]) -> ...`
 Unpacks varargs.
 
 ---
@@ -44,16 +44,16 @@ Makes an array with all the keys of `t`, optionally sorted.  The second arg may 
 ### `list.values(t[, cmp]) -> dt`
 Makes an array with all the values of `t`, optionally sorted.  The second arg may be `'true'`, `'asc'`, `'desc'` or a comparison function.
 
-### `glue.sortedpairs(t[, cmp]) -> iter() -> k, v`
+### `list.sortedpairs(t[, cmp]) -> iter() -> k, v`
 Like `pairs` but in key order. the implementation creates a temporary table to sort the keys in.
 
 ### `list.clone(t) -> dt`
 deep clones each key-value pair of the input table.
 
-### `glue.update(dt, t1, ...) -> dt`
+### `list.update(dt, t1, ...) -> dt`
 Update a table with elements of other tables, overwriting any existing keys. Falsey arguments are skipped.
 
-###  `glue.merge(dt,t1,...) -> dt`
+###  `list.merge(dt, t1, ...) -> dt`
 Update a table with elements of other tables skipping any existing keys.
 
 ### `list.find(t, v) -> v`
