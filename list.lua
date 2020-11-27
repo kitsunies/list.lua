@@ -254,8 +254,8 @@ function list.shift(t, i, n)
     return t
 end
 
--- return the biggest value inside the table in base of a comparator function
-function table.max(t)
+-- return the biggest value inside the table in base of a comparator function.
+function list.max(t)
     local max = t[1]
     for i = 2, #t do
         if t[i] >= max then
@@ -265,8 +265,8 @@ function table.max(t)
     return max
 end
 
--- return the smallest value inside the table in base of a comparator function
-function table.min(t)
+-- return the smallest value inside the table in base of a comparator function.
+function list.min(t)
     local min = t[1]
     for i = 2, #t do
         if t[i] <= min then
@@ -276,8 +276,8 @@ function table.min(t)
     return min
 end
 
--- return the average value inside table
-function table.avg(t)
+-- return the average value inside table.
+function list.avg(t)
     local avg = t[1]
     if avg == nil then
         return 0
@@ -301,22 +301,22 @@ function list.get(t, k)
     return t[k]
 end
 
--- remove and return the last element into the table
+-- remove and return the last element into the table.
 function list.pop(t)
     return table.remove(t, #t)
 end
 
--- remove and return the first element into the table
+-- remove and return the first element into the table.
 function list.head(t)
     return table.remove(t, 1)
 end
 
--- return the last element into the table
+-- return the last element into the table.
 function list.last(t)
     return t[#t]
 end
 
--- return the first value into the table
+-- return the first value into the table.
 function list.first(t)
     return t[1]
 end
@@ -334,7 +334,7 @@ function list.map(t, f, ...)
                 local sel = v[f]
                 if type(sel) == 'function' then
                     dt[k] = sel(v, ...)
-                else -- field to pluck
+                else
                     dt[k] = sel
                 end
             end
@@ -358,7 +358,7 @@ function list.map(t, f, ...)
     return dt
 end
 
---pretty-print t without deep recursion causing a stack overflow
+-- pretty-print t without deep recursion causing a stack overflow.
 function list.stringify(t, i)
     local i = string.rep(' ', i or 4)
     local cache, stack, output = {}, {}, {}
