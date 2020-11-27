@@ -22,25 +22,38 @@ function list.index(t)
     return dt
 end
 
+local function sort(t, cmp)
+    if cmp == true or cmp == 'asc' then
+        table.sort(t)
+    elseif cmp == 'desc' then
+        table.sort(
+            t,
+            function(a, b)
+                return a > b
+            end
+        )
+    elseif cmp then
+        table.sort(t, cmp)
+    end
+    return t
+end
+
 -- put keys in a list, optionally sorted.
 function list.keys(t, cmp)
     local dt = {}
     for k in pairs(t) do
         dt[#dt + 1] = k
     end
-    if cmp == true or cmp == 'asc' then
-        table.sort(dt)
-    elseif cmp == 'desc' then
-        table.sort(
-            dt,
-            function(a, b)
-                return a > b
-            end
-        )
-    elseif cmp then
-        table.sort(dt, cmp)
+    return sort(dt, cmp)
+end
+
+-- put values in a list, optionally sorted.
+function list.values(t, cmp)
+    local dt = {}
+    for i = 1, #t do
+        dt[#dt + 1] = t[i]
     end
-    return dt
+    return sort(dt, cmp)
 end
 
 -- stateless pairs() that iterate elements in key order.
@@ -51,6 +64,20 @@ function list.sortedpairs(t, cmp)
         i = i + 1
         return kt[i], t[kt[i]]
     end
+end
+
+-- deep clones each key-value pair of the input table.
+function list.clone(t)
+    local dt = {}
+    if type(t) == 'table' then
+        for k, v in pairs(t) do
+            dt[list.clone(k)] = list.clone(v)
+        end
+        setmetatable(dt, list.clone(getmetatable(t)))
+    else
+        dt = t
+    end
+    return dt
 end
 
 -- update a table with the contents of other table(s).
@@ -79,6 +106,31 @@ function list.merge(dt, ...)
         end
     end
     return dt
+end
+
+-- apply the given function on all (key, value) pairs of table
+function list.each(t, f, ...)
+    for k, v in pairs(t) do
+        f(k, v, ...)
+    end
+    return t
+end
+
+-- apply the given function to all the elements of the table
+function list.eachi(t, f, ...)
+    for i = 1, #t do
+        f(t[i], ...)
+    end
+    return t
+end
+
+-- return a table which values are in opposite order
+function table.reverse(t)
+    for i = 1, math.floor(#t * 0.5) do
+        local k = #t - i + 1
+        t[i], t[k] = t[k], t[i]
+    end
+    return t
 end
 
 -- get the value of a table field, and if there is no field present, creates and returns it as an empty table.
@@ -168,7 +220,7 @@ function list.find(t, v)
     end
 end
 
--- check whether t this an array?
+-- check whether t this an array.
 function list.isarray(t)
     for i in pairs(t) do
         if type(i) ~= 'number' then
@@ -176,6 +228,20 @@ function list.isarray(t)
         end
     end
     return true
+end
+
+-- returns a random element of the table.
+function list.sample(t)
+    return #t > 0 and t[math.random(size)]
+end
+
+-- mix the values inside the given table.
+function list.shuffle(t)
+    for i = 1, #t do
+        local k = math.random(#t)
+        t[i], t[k] = t[k], t[i]
+    end
+    return t
 end
 
 -- shift all the elements on the right of i (i inclusive) to the left or further to the right.
@@ -186,6 +252,73 @@ function list.shift(t, i, n)
         list.remove(t, i, -n)
     end
     return t
+end
+
+-- return the biggest value inside the table in base of a comparator function
+function table.max(t)
+    local max = t[1]
+    for i = 2, #t do
+        if t[i] >= max then
+            max = t[i]
+        end
+    end
+    return max
+end
+
+-- return the smallest value inside the table in base of a comparator function
+function table.min(t)
+    local min = t[1]
+    for i = 2, #t do
+        if t[i] <= min then
+            min = t[i]
+        end
+    end
+    return min
+end
+
+-- return the average value inside table
+function table.avg(t)
+    local avg = t[1]
+    if avg == nil then
+        return 0
+    end
+    for i = 2, #t do
+        avg = avg + t[i]
+    end
+    return avg / #t
+end
+
+-- returns the element at the given index.
+function list.at(t, i)
+    if i >= 0 then
+        return t[i]
+    end
+    return t[#t + i + 1]
+end
+
+-- returns the element at the given key.
+function list.get(t, k)
+    return t[k]
+end
+
+-- remove and return the last element into the table
+function list.pop(t)
+    return table.remove(t, #t)
+end
+
+-- remove and return the first element into the table
+function list.head(t)
+    return table.remove(t, 1)
+end
+
+-- return the last element into the table
+function list.last(t)
+    return t[#t]
+end
+
+-- return the first value into the table
+function list.first(t)
+    return t[1]
 end
 
 -- map f over t or extract a column from a list of records.
