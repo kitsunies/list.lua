@@ -1,5 +1,14 @@
 local list = {}
 
+-- build an iterator through the given table
+function list.iter(t)
+    local i = 1
+    return function()
+        i = i + 1
+        return t[i]
+    end
+end
+    
 -- count the keys in a table with an optional upper limit.
 function list.count(t, maxn)
     local maxn = maxn or 1 / 0
