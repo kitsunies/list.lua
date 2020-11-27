@@ -1,6 +1,5 @@
 local list = {}
-
--- count the keys in a table with an optional upper limit.
+    
 function list.count(t, maxn)
     local maxn = maxn or 1 / 0
     local n = 0
@@ -13,7 +12,6 @@ function list.count(t, maxn)
     return n
 end
 
--- reverse keys with values.
 function list.index(t)
     local dt = {}
     for k, v in pairs(t) do
@@ -38,7 +36,6 @@ local function sort(t, cmp)
     return t
 end
 
--- put keys in a list, optionally sorted.
 function list.keys(t, cmp)
     local dt = {}
     for k in pairs(t) do
@@ -47,7 +44,6 @@ function list.keys(t, cmp)
     return sort(dt, cmp)
 end
 
--- put values in a list, optionally sorted.
 function list.values(t, cmp)
     local dt = {}
     for i = 1, #t do
@@ -56,7 +52,6 @@ function list.values(t, cmp)
     return sort(dt, cmp)
 end
 
--- stateless pairs() that iterate elements in key order.
 function list.sortedpairs(t, cmp)
     local kt = list.keys(t, cmp or true)
     local i = 0
@@ -66,7 +61,6 @@ function list.sortedpairs(t, cmp)
     end
 end
 
--- deep clones each key-value pair of the input table.
 function list.clone(t)
     local dt = {}
     if type(t) == 'table' then
@@ -80,7 +74,6 @@ function list.clone(t)
     return dt
 end
 
--- update a table with the contents of other table(s).
 function list.update(dt, ...)
     for i = 1, select('#', ...) do
         local t = select(i, ...)
@@ -93,7 +86,6 @@ function list.update(dt, ...)
     return dt
 end
 
--- add the contents of other table(s) without overwrite.
 function list.merge(dt, ...)
     for i = 1, select('#', ...) do
         local t = select(i, ...)
@@ -108,7 +100,6 @@ function list.merge(dt, ...)
     return dt
 end
 
--- apply the given function on all (key, value) pairs of table
 function list.each(t, f, ...)
     for k, v in pairs(t) do
         f(k, v, ...)
@@ -116,7 +107,6 @@ function list.each(t, f, ...)
     return t
 end
 
--- apply the given function to all the elements of the table
 function list.eachi(t, f, ...)
     for i = 1, #t do
         f(t[i], ...)
@@ -124,7 +114,6 @@ function list.eachi(t, f, ...)
     return t
 end
 
--- return a table which values are in opposite order
 function table.reverse(t)
     for i = 1, math.floor(#t * 0.5) do
         local k = #t - i + 1
@@ -133,7 +122,6 @@ function table.reverse(t)
     return t
 end
 
--- get the value of a table field, and if there is no field present, creates and returns it as an empty table.
 function list.attr(t, k, v0)
     local v = t[k]
     if v == nil then
@@ -154,12 +142,10 @@ else
     end
 end
 
--- always use this because unpack/table.unpack's default j is #t not t.n.
 function list.unpack(t, i, j)
     return (unpack or table.unpack)(t, i or 1, j or t.n or #t)
 end
 
--- extend a list with the elements of other lists.
 function list.extend(dt, ...)
     for j = 1, select('#', ...) do
         local t = select(j, ...)
@@ -173,7 +159,6 @@ function list.extend(dt, ...)
     return dt
 end
 
--- append non-nil arguments to a list.
 function list.append(dt, ...)
     local j = #dt
     for i = 1, select('#', ...) do
@@ -182,7 +167,6 @@ function list.append(dt, ...)
     return dt
 end
 
--- insert n elements at i, shifting elements on the right of i (i inclusive) to the right.
 function list.insert(t, i, n)
     if n == 1 then
         table.insert(t, i, false)
@@ -193,9 +177,8 @@ function list.insert(t, i, n)
     end
 end
 
--- remove n elements at i, shifting elements on the right of i (i inclusive) to the left.
 function list.remove(t, i, n)
-    n = min(n, #t - i + 1)
+    n = math.min(n, #t - i + 1)
     if n == 1 then
         table.remove(t, i)
         return
@@ -208,7 +191,6 @@ function list.remove(t, i, n)
     end
 end
 
--- find the element v from a list t.
 function list.find(t, v)
     if v == nil or t == nil then
         return
@@ -220,7 +202,6 @@ function list.find(t, v)
     end
 end
 
--- check whether t this an array.
 function list.isarray(t)
     for i in pairs(t) do
         if type(i) ~= 'number' then
@@ -230,12 +211,10 @@ function list.isarray(t)
     return true
 end
 
--- returns a random element of the table.
 function list.sample(t)
     return #t > 0 and t[math.random(size)]
 end
 
--- mix the values inside the given table.
 function list.shuffle(t)
     for i = 1, #t do
         local k = math.random(#t)
@@ -244,7 +223,6 @@ function list.shuffle(t)
     return t
 end
 
--- shift all the elements on the right of i (i inclusive) to the left or further to the right.
 function list.shift(t, i, n)
     if n > 0 then
         list.insert(t, i, n)
@@ -254,7 +232,6 @@ function list.shift(t, i, n)
     return t
 end
 
--- return the biggest value inside the table in base of a comparator function.
 function list.max(t)
     local max = t[1]
     for i = 2, #t do
@@ -265,7 +242,6 @@ function list.max(t)
     return max
 end
 
--- return the smallest value inside the table in base of a comparator function.
 function list.min(t)
     local min = t[1]
     for i = 2, #t do
@@ -276,7 +252,6 @@ function list.min(t)
     return min
 end
 
--- return the average value inside table.
 function list.avg(t)
     local avg = t[1]
     if avg == nil then
@@ -288,7 +263,6 @@ function list.avg(t)
     return avg / #t
 end
 
--- returns the element at the given index.
 function list.at(t, i)
     if i >= 0 then
         return t[i]
@@ -296,32 +270,26 @@ function list.at(t, i)
     return t[#t + i + 1]
 end
 
--- returns the element at the given key.
 function list.get(t, k)
     return t[k]
 end
 
--- remove and return the last element into the table.
 function list.pop(t)
     return table.remove(t, #t)
 end
 
--- remove and return the first element into the table.
 function list.head(t)
     return table.remove(t, 1)
 end
 
--- return the last element into the table.
 function list.last(t)
     return t[#t]
 end
 
--- return the first value into the table.
 function list.first(t)
     return t[1]
 end
 
--- map f over t or extract a column from a list of records.
 function list.map(t, f, ...)
     local dt = {}
     if #t == 0 then
@@ -358,7 +326,6 @@ function list.map(t, f, ...)
     return dt
 end
 
--- pretty-print t without deep recursion causing a stack overflow.
 function list.stringify(t, i)
     local i = string.rep(' ', i or 4)
     local cache, stack, output = {}, {}, {}
