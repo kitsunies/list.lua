@@ -1,8 +1,8 @@
 package = "list"
-version = "1.0"
+version = "1.0-0"
 source = {
     url = "git+https://github.com/kitsunies/list.lua.git",
-    tag = "v1.0"
+    tag = "v1.0-0"
 }
 description = {
     homepage = "https://github.com/kitsunies/list.lua",
