@@ -77,11 +77,6 @@ so you can use them as table methods:
 table.stringify({})
 ```
 
-this also allows for the use of syntatic sugar:
-```lua
-({}):stringify()
-```
-
 ---
 
 ### Varargs
