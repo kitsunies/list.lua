@@ -20,6 +20,7 @@ Copy the [list.lua](list.lua) file somewhere where your Lua interpreter will be 
 local list = require("list")
 ```
 
+<!-- Might add back later...
 # Interface Summary
 
 |                                                 |                                                          |
@@ -60,8 +61,28 @@ local list = require("list")
 | `list.map(t, f, ...) -> t`                      | map f over t or select a column from an array of records |
 | `list.stringify(t, i) -> s`                     | converts a table to a prettified string                  |
 |                                                 |                                                          |
+-->
 
 # Interface
+
+## Tips
+
+You can extend the Lua table namespace by doing:
+```lua
+list.update(table, list)
+```
+
+so you can use them as table methods:
+```lua
+table.stringify({})
+```
+
+this also allows for the use of syntatic sugar:
+```lua
+({}):stringify()
+```
+
+---
 
 ### Varargs
 
